@@ -32,31 +32,52 @@
 - 后端:Python + FastAPI,DeepSeek API(OpenAI 兼容,deepseek-chat)
 - 前端:Next.js 16 (App Router) + TypeScript + Tailwind CSS
 
-## 运行
+## 快速开始
 
-> 本机用 `nvm` 管理 Node;新终端先 `source ~/.nvm/nvm.sh`(或重开终端)。
+### 前置依赖
 
-### 1. 后端
+- **Python ≥ 3.9**(`python3 --version`)
+- **Node.js ≥ 18**(`node -v`);本机用 `nvm` 管理,新终端先 `source ~/.nvm/nvm.sh` 或重开终端
+- 一个 **DeepSeek API Key**(https://platform.deepseek.com),用于 AI 功能
+
+### 1. 克隆
+
+```bash
+git clone https://github.com/weibin666/xhs_note.git
+cd xhs_note
+```
+
+### 2. 启动后端(终端 A)
 
 ```bash
 cd backend
-cp .env.example .env          # 填入 DEEPSEEK_API_KEY
-python3 -m venv .venv         # 首次
-.venv/bin/pip install -r requirements.txt
+cp .env.example .env                       # 然后编辑 .env,填入 DEEPSEEK_API_KEY
+python3 -m venv .venv                       # 首次
+.venv/bin/pip install -r requirements.txt   # 首次
 .venv/bin/uvicorn app.main:app --reload --port 8000
 ```
 
-API 文档:http://localhost:8000/docs
+- 数据库:首次启动自动创建 `backend/xhs.db`(SQLite),无需手动建表。
+- API 文档:http://localhost:8000/docs
+- 健康检查:http://localhost:8000/health
 
-### 2. 前端
+### 3. 启动前端(终端 B)
 
 ```bash
 cd frontend
-npm install                   # 首次
+npm install      # 首次
 npm run dev
 ```
 
-访问:http://localhost:3000(默认连后端 `http://localhost:8000`,可在 `.env.local` 改 `NEXT_PUBLIC_API_BASE`)
+打开 http://localhost:3000 即可使用。
+
+> 前端默认连后端 `http://localhost:8000`;如需修改,在 `frontend/` 下建 `.env.local` 写 `NEXT_PUBLIC_API_BASE=http://你的地址`。
+> 后端默认只允许 `http://localhost:3000` 跨域,改前端端口时同步改 `backend/.env` 的 `FRONTEND_ORIGIN`。
+
+### 4. 验证安装
+
+- 打开「🛡️ 合规检测」,粘贴一段含"最好""加微信"的文字 → 应标红风险词(此功能无需 API Key)。
+- 打开「📝 笔记生成」,输入主题点生成 → 出现完整笔记则说明 DeepSeek Key 配置成功。
 
 ## 说明
 
