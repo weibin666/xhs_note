@@ -36,8 +36,8 @@
 
 ### 前置依赖
 
-- **Python ≥ 3.9**(`python3 --version`)
-- **Node.js ≥ 18**(`node -v`);本机用 `nvm` 管理,新终端先 `source ~/.nvm/nvm.sh` 或重开终端
+- **Python ≥ 3.9**(`python3 --version` / Windows:`python --version`)
+- **Node.js ≥ 20.9**(`node -v`,Next 16 硬性要求)。macOS 用 `nvm`,Windows 建议 [nvm-windows](https://github.com/coreybutler/nvm-windows) 或官网安装包
 - 一个 **DeepSeek API Key**(https://platform.deepseek.com),用于 AI 功能
 
 ### 1. 克隆
@@ -49,12 +49,22 @@ cd xhs_note
 
 ### 2. 启动后端(终端 A)
 
+**macOS / Linux:**
 ```bash
 cd backend
 cp .env.example .env                       # 然后编辑 .env,填入 DEEPSEEK_API_KEY
 python3 -m venv .venv                       # 首次
 .venv/bin/pip install -r requirements.txt   # 首次
 .venv/bin/uvicorn app.main:app --reload --port 8000
+```
+
+**Windows(PowerShell / CMD):**
+```bat
+cd backend
+copy .env.example .env                      :: 然后编辑 .env,填入 DEEPSEEK_API_KEY
+python -m venv .venv                         :: 首次
+.venv\Scripts\pip install -r requirements.txt:: 首次
+.venv\Scripts\uvicorn app.main:app --reload --port 8000
 ```
 
 - 数据库:首次启动自动创建 `backend/xhs.db`(SQLite),无需手动建表。
@@ -70,6 +80,12 @@ npm run dev
 ```
 
 打开 http://localhost:3000 即可使用。
+
+> **Windows 若 `npm run dev` 报 `Cannot find module ...win32...`(lightningcss / @next/swc)**:这是 npm 跨平台安装漏装原生二进制的已知问题,删掉重装即可:
+> ```powershell
+> Remove-Item -Recurse -Force node_modules, package-lock.json -ErrorAction SilentlyContinue
+> npm install
+> ```
 
 > 前端默认连后端 `http://localhost:8000`;如需修改,在 `frontend/` 下建 `.env.local` 写 `NEXT_PUBLIC_API_BASE=http://你的地址`。
 > 后端默认只允许 `http://localhost:3000` 跨域,改前端端口时同步改 `backend/.env` 的 `FRONTEND_ORIGIN`。
